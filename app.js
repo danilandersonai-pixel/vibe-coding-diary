@@ -1,7 +1,8 @@
 const STORAGE_KEY = "stanza-diary.entries.v1";
-const AUTH_KEY = "stanza-diary.auth.v1";
 const SETTINGS_KEY = "stanza-diary.settings.v1";
 const SEED_KEY = "stanza-diary.seeded.v1";
+const PIN_KEY = "stanza-diary.pin.v1";
+const LEGACY_AUTH_KEY = "stanza-diary.auth.v1";
 
 const state = {
   view: "today",
@@ -12,7 +13,10 @@ const state = {
   autosaveTimer: null,
   entries: loadEntries(),
   settings: loadSettings(),
+  isUnlocked: false,
 };
+
+localStorage.removeItem(LEGACY_AUTH_KEY);
 
 const fields = {
   did: document.querySelector("#did"),
@@ -30,9 +34,20 @@ const editFields = {
   tags: document.querySelector("#edit-tags"),
 };
 
-const loginScreen = document.querySelector("#login-screen");
+const lockScreen = document.querySelector("#lock-screen");
 const appScreen = document.querySelector("#app-screen");
-const loginForm = document.querySelector("#login-form");
+const lockPinInput = document.querySelector("#lock-pin-input");
+const lockPinDots = document.querySelector("#lock-pin-dots");
+const lockPinError = document.querySelector("#lock-pin-error");
+const pinModal = document.querySelector("#pin-modal");
+const pinModalMessage = document.querySelector("#pin-modal-message");
+const pinModalInput = document.querySelector("#pin-modal-input");
+const pinModalDots = document.querySelector("#pin-modal-dots");
+const pinModalError = document.querySelector("#pin-modal-error");
+const pinModalConfirm = document.querySelector("[data-pin-modal-confirm]");
+const pinModalCancel = document.querySelector("[data-pin-modal-cancel]");
+const pinEnabledCheckbox = document.querySelector("#pin-enabled");
+const pinControls = document.querySelector("#pin-controls");
 const entryForm = document.querySelector("#entry-form");
 const editForm = document.querySelector("#edit-form");
 const searchInput = document.querySelector("#search");
@@ -52,17 +67,6 @@ const weeklySummary = document.querySelector("#weekly-summary");
 
 seedEntries();
 boot();
-
-loginForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  localStorage.setItem(AUTH_KEY, "true");
-  showApp();
-});
-
-document.querySelector("[data-login-google]").addEventListener("click", () => {
-  localStorage.setItem(AUTH_KEY, "true");
-  showApp();
-});
 
 document.querySelectorAll("[data-nav]").forEach((button) => {
   button.addEventListener("click", () => setView(button.dataset.nav));
@@ -130,11 +134,12 @@ document.querySelector("[data-export]").addEventListener("click", exportEntries)
 document.querySelector("#import-json").addEventListener("change", importEntries);
 document.querySelector("[data-apply-template]").addEventListener("click", applyDailyTemplate);
 
-document.querySelector("[data-logout]").addEventListener("click", () => {
-  localStorage.removeItem(AUTH_KEY);
-  loginScreen.classList.remove("is-hidden");
-  appScreen.classList.add("is-hidden");
-});
+lockPinInput.addEventListener("input", onLockPinInput);
+lockScreen.addEventListener("click", focusLockPin);
+document.querySelector("[data-pin-reset]").addEventListener("click", onPinReset);
+
+pinEnabledCheckbox.addEventListener("change", onPinToggle);
+document.querySelector("[data-pin-change]").addEventListener("click", onPinChange);
 
 document.querySelector("[data-clear]").addEventListener("click", async () => {
   const confirmed = await confirmAction("Очистить все записи? Это действие нельзя отменить.");
@@ -154,16 +159,35 @@ function boot() {
   setAutosaveStatus(state.settings.autosave ? "saved" : "off");
   renderAll();
   registerServiceWorker();
+  refreshPinControls();
 
-  if (localStorage.getItem(AUTH_KEY) === "true") {
-    showApp();
+  if (hasStoredPin()) {
+    showLockScreen();
+  } else {
+    unlockApp();
   }
 }
 
-function showApp() {
-  loginScreen.classList.add("is-hidden");
+function showLockScreen() {
+  state.isUnlocked = false;
+  appScreen.classList.add("is-hidden");
+  lockScreen.classList.remove("is-hidden");
+  clearPinInput(lockPinInput, lockPinDots);
+  lockPinError.textContent = "";
+  setTimeout(focusLockPin, 0);
+}
+
+function unlockApp() {
+  state.isUnlocked = true;
+  lockScreen.classList.add("is-hidden");
   appScreen.classList.remove("is-hidden");
   setView("today");
+}
+
+function focusLockPin() {
+  if (!lockScreen.classList.contains("is-hidden")) {
+    lockPinInput.focus();
+  }
 }
 
 function setView(view) {
@@ -848,6 +872,196 @@ function formatSaveTime(date) {
 function registerServiceWorker() {
   if (!("serviceWorker" in navigator) || location.protocol === "file:") return;
   navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+
+function hasStoredPin() {
+  const record = getStoredPin();
+  return Boolean(record && record.hash && record.salt);
+}
+
+function getStoredPin() {
+  try {
+    return JSON.parse(localStorage.getItem(PIN_KEY) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function generateSalt() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes));
+}
+
+async function hashPin(pin, salt) {
+  const buffer = new TextEncoder().encode(`${pin}::${salt}`);
+  const digest = await crypto.subtle.digest("SHA-256", buffer);
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function savePin(pin) {
+  const salt = generateSalt();
+  const hash = await hashPin(pin, salt);
+  localStorage.setItem(PIN_KEY, JSON.stringify({ hash, salt }));
+}
+
+function clearStoredPin() {
+  localStorage.removeItem(PIN_KEY);
+}
+
+async function verifyPinAttempt(pin) {
+  const record = getStoredPin();
+  if (!record) return false;
+  const hash = await hashPin(pin, record.salt);
+  return hash === record.hash;
+}
+
+function updatePinDots(dotsContainer, length) {
+  dotsContainer.querySelectorAll(".pin-dot").forEach((dot, index) => {
+    dot.classList.toggle("is-filled", index < length);
+  });
+}
+
+function clearPinInput(input, dotsContainer) {
+  input.value = "";
+  updatePinDots(dotsContainer, 0);
+}
+
+function shake(dotsContainer) {
+  dotsContainer.classList.remove("is-shake");
+  void dotsContainer.offsetWidth;
+  dotsContainer.classList.add("is-shake");
+}
+
+async function onLockPinInput() {
+  const value = lockPinInput.value.replace(/\D/g, "").slice(0, 4);
+  lockPinInput.value = value;
+  updatePinDots(lockPinDots, value.length);
+  lockPinError.textContent = "";
+  if (value.length === 4) {
+    const ok = await verifyPinAttempt(value);
+    if (ok) {
+      unlockApp();
+    } else {
+      lockPinError.textContent = "неверный PIN";
+      shake(lockPinDots);
+      clearPinInput(lockPinInput, lockPinDots);
+      focusLockPin();
+    }
+  }
+}
+
+async function onPinReset() {
+  const confirmed = await confirmAction(
+    "Сбросить PIN? Дневник откроется без блокировки. Записи останутся, но напомню: они и так не зашифрованы — это была только UX-блокировка.",
+  );
+  if (!confirmed) return;
+  clearStoredPin();
+  refreshPinControls();
+  unlockApp();
+}
+
+async function onPinToggle(event) {
+  if (event.target.checked) {
+    const pin = await promptNewPin();
+    if (!pin) {
+      event.target.checked = false;
+      return;
+    }
+    await savePin(pin);
+    await notice("PIN установлен. В следующий раз попросим его при открытии.");
+  } else {
+    const confirmed = await confirmAction("Отключить PIN-защиту? Дневник будет открываться без блокировки.");
+    if (!confirmed) {
+      event.target.checked = true;
+      return;
+    }
+    clearStoredPin();
+  }
+  refreshPinControls();
+}
+
+async function onPinChange() {
+  const pin = await promptNewPin();
+  if (!pin) return;
+  await savePin(pin);
+  await notice("PIN обновлён.");
+}
+
+function refreshPinControls() {
+  const enabled = hasStoredPin();
+  pinEnabledCheckbox.checked = enabled;
+  pinControls.classList.toggle("is-hidden", !enabled);
+}
+
+async function promptNewPin() {
+  while (true) {
+    const first = await openPinModal("задай PIN", "4 цифры");
+    if (first === null) return null;
+    const second = await openPinModal("повтори PIN", "ещё раз те же 4 цифры");
+    if (second === null) return null;
+    if (first === second) return first;
+    await notice("PIN-ы не совпали. Попробуй ещё раз.");
+  }
+}
+
+function openPinModal(title, message) {
+  return new Promise((resolve) => {
+    document.querySelector("#pin-modal-title").textContent = `// ${title}`;
+    pinModalMessage.textContent = message;
+    pinModalError.textContent = "";
+    clearPinInput(pinModalInput, pinModalDots);
+    pinModal.classList.remove("is-hidden");
+    requestAnimationFrame(() => pinModalInput.focus());
+
+    const onCardClick = (event) => {
+      if (event.target.tagName !== "BUTTON") {
+        pinModalInput.focus();
+      }
+    };
+    pinModal.addEventListener("click", onCardClick);
+
+    const onInput = () => {
+      const value = pinModalInput.value.replace(/\D/g, "").slice(0, 4);
+      pinModalInput.value = value;
+      updatePinDots(pinModalDots, value.length);
+      pinModalError.textContent = "";
+    };
+    const onConfirm = () => {
+      const value = pinModalInput.value;
+      if (value.length !== 4) {
+        pinModalError.textContent = "введи 4 цифры";
+        shake(pinModalDots);
+        return;
+      }
+      cleanup(value);
+    };
+    const onCancel = () => cleanup(null);
+    const onKey = (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        onConfirm();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        onCancel();
+      }
+    };
+    const cleanup = (result) => {
+      pinModal.classList.add("is-hidden");
+      pinModalInput.removeEventListener("input", onInput);
+      pinModalConfirm.removeEventListener("click", onConfirm);
+      pinModalCancel.removeEventListener("click", onCancel);
+      pinModalInput.removeEventListener("keydown", onKey);
+      pinModal.removeEventListener("click", onCardClick);
+      resolve(result);
+    };
+    pinModalInput.addEventListener("input", onInput);
+    pinModalConfirm.addEventListener("click", onConfirm);
+    pinModalCancel.addEventListener("click", onCancel);
+    pinModalInput.addEventListener("keydown", onKey);
+  });
 }
 
 function escapeHtml(value) {

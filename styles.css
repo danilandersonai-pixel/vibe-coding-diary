@@ -53,20 +53,20 @@ button { cursor: pointer; }
 .blink-after::after { content: "_"; }
 @keyframes blink { 50% { opacity: 0; } }
 
-.login-screen {
+.lock-screen {
   display: grid;
   min-height: 100dvh;
   place-items: center;
   padding: 24px;
   overflow: hidden;
 }
-.login-card {
+.lock-card {
   display: flex;
   width: min(100%, 400px);
   flex-direction: column;
   gap: 48px;
 }
-.login-header {
+.lock-header {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -79,7 +79,7 @@ button { cursor: pointer; }
   font-size: 11px;
   line-height: 14px;
 }
-.login-header h1 {
+.lock-header h1 {
   margin: 0;
   font-family: var(--mono);
   font-size: 32px;
@@ -87,17 +87,96 @@ button { cursor: pointer; }
   font-weight: 400;
   line-height: 40px;
 }
-.login-header p {
+.lock-header p {
   max-width: 280px;
   margin: 8px 0 0;
   color: var(--on-surface-muted);
   font-size: 16px;
   line-height: 24px;
 }
-.auth-form, .stack-form, .settings-list {
+.lock-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  cursor: pointer;
+}
+.stack-form, .settings-list {
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
+.pin-input-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  opacity: 0;
+}
+.pin-dots {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border: 1px dashed var(--outline-variant);
+  border-radius: 50%;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.pin-dot.is-filled {
+  border-style: solid;
+  border-color: var(--primary);
+  background: var(--primary);
+}
+.pin-dots.is-shake {
+  animation: pin-shake 320ms ease;
+}
+@keyframes pin-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.pin-error {
+  min-height: 20px;
+  margin: 0;
+  color: var(--error);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+}
+.pin-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.info-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px dashed var(--outline-variant);
+  background: var(--surface-container-low);
+  padding: 16px;
+}
+.info-block strong {
+  color: var(--primary-container);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  line-height: 14px;
+}
+.info-block p {
+  margin: 0;
+  color: var(--on-surface-variant);
+  font-size: 14px;
+  line-height: 20px;
 }
 input, textarea {
   width: 100%;
@@ -171,32 +250,6 @@ input:focus, textarea:focus {
   border-color: var(--error);
   background: rgba(255, 180, 171, 0.08);
 }
-.google-mark {
-  display: grid;
-  width: 20px;
-  height: 20px;
-  place-items: center;
-  border-radius: 50%;
-  color: #4285f4;
-  font-family: Arial, sans-serif;
-  font-weight: 700;
-}
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  color: var(--on-surface-muted);
-  font-size: 14px;
-  font-style: italic;
-  line-height: 20px;
-}
-.divider::before, .divider::after {
-  content: "";
-  height: 1px;
-  flex: 1;
-  border-top: 1px dashed var(--outline-variant);
-}
-
 .app-screen {
   min-height: 100dvh;
   padding-bottom: 80px;
@@ -808,7 +861,7 @@ input:focus, textarea:focus {
 }
 @media (min-width: 760px) {
   body { display: flex; justify-content: center; }
-  .app-screen, .login-screen {
+  .app-screen, .lock-screen {
     width: 720px;
     border-right: 1px dashed var(--outline-dim);
     border-left: 1px dashed var(--outline-dim);

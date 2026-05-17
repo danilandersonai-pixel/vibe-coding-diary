@@ -7,9 +7,13 @@
 Текущие ключи `localStorage`:
 
 - `stanza-diary.entries.v1` — записи;
-- `stanza-diary.auth.v1` — локальный флаг входа;
 - `stanza-diary.settings.v1` — настройки;
-- `stanza-diary.seeded.v1` — флаг демо-данных.
+- `stanza-diary.seeded.v1` — флаг демо-данных;
+- `stanza-diary.pin.v1` — запись PIN-блокировки `{ hash, salt }` или отсутствует.
+
+Удалённые ключи (миграция):
+
+- `stanza-diary.auth.v1` — стирается при старте, был бутафорским флагом «вошёл».
 
 ## Entry
 
@@ -48,11 +52,23 @@
 
 Будущие настройки:
 
-- `pinEnabled`;
 - `autoLockMinutes`;
 - `theme`;
 - `backupReminder`;
 - `defaultTemplateId`.
+
+## PIN record (с 0.2.0)
+
+```json
+{
+  "hash": "f3a8...d2",
+  "salt": "Yk0v8q...=="
+}
+```
+
+- `hash` — `SHA-256("<pin>::<salt>")` в hex;
+- `salt` — 16 случайных байт через `crypto.getRandomValues`, в base64;
+- Отсутствие ключа = PIN не задан, дневник открывается без блокировки.
 
 ## IndexedDB target
 

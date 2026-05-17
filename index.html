@@ -16,22 +16,20 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <section id="login-screen" class="login-screen dot-grid">
-      <main class="login-card">
-        <header class="login-header">
+    <section id="lock-screen" class="lock-screen dot-grid is-hidden">
+      <main class="lock-card">
+        <header class="lock-header">
           <div class="terminal-line">&gt; log_book <span class="cursor">_</span></div>
           <h1>Дневник</h1>
-          <p>введи email — пришлём ссылку для входа без пароля</p>
+          <p>введи PIN, чтобы открыть</p>
         </header>
-
-        <form id="login-form" class="auth-form">
-          <input id="email" type="email" placeholder="you@example.com" required />
-          <button class="primary-button" type="submit">отправить ссылку</button>
-          <div class="divider"><span>или</span></div>
-          <button class="ghost-button" type="button" data-login-google>
-            <span class="google-mark" aria-hidden="true">G</span>
-            войти через Google
-          </button>
+        <form id="lock-form" class="lock-form" autocomplete="off">
+          <input id="lock-pin-input" class="pin-input-hidden" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" />
+          <div class="pin-dots" id="lock-pin-dots" aria-hidden="true">
+            <span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span>
+          </div>
+          <p class="pin-error" id="lock-pin-error" role="alert"></p>
+          <button class="ghost-button compact-button" type="button" data-pin-reset>сбросить PIN</button>
         </form>
       </main>
     </section>
@@ -225,7 +223,22 @@
               <input id="import-json" type="file" accept="application/json" />
             </label>
             <button class="danger-button" type="button" data-clear>очистить записи</button>
-            <button class="ghost-button" type="button" data-logout>выйти</button>
+
+            <div class="section-title">// приватность</div>
+            <label class="setting-row">
+              <span>
+                <strong>PIN-код</strong>
+                <small>защита от случайного открытия</small>
+              </span>
+              <input id="pin-enabled" type="checkbox" />
+            </label>
+            <div id="pin-controls" class="pin-controls is-hidden">
+              <button class="ghost-button" type="button" data-pin-change>сменить PIN</button>
+            </div>
+            <div class="info-block">
+              <strong>// где хранятся данные</strong>
+              <p>записи лежат в браузере. удаление данных сайта стирает дневник. PIN — это UX-блокировка, не шифрование: данные в localStorage не зашифрованы. JSON-экспорт делай регулярно.</p>
+            </div>
           </section>
         </section>
 
@@ -271,6 +284,24 @@
         <div class="modal-actions">
           <button class="ghost-button" type="button" data-modal-cancel>отмена</button>
           <button class="danger-button" type="button" data-modal-confirm>подтвердить</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pin-modal" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title">
+      <div class="modal-card">
+        <div class="section-title" id="pin-modal-title">// pin</div>
+        <p id="pin-modal-message">введи PIN</p>
+        <form id="pin-modal-form" autocomplete="off">
+          <input id="pin-modal-input" class="pin-input-hidden" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" />
+          <div class="pin-dots" id="pin-modal-dots" aria-hidden="true">
+            <span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span>
+          </div>
+          <p class="pin-error" id="pin-modal-error" role="alert"></p>
+        </form>
+        <div class="modal-actions">
+          <button class="ghost-button" type="button" data-pin-modal-cancel>отмена</button>
+          <button class="primary-button" type="button" data-pin-modal-confirm>далее</button>
         </div>
       </div>
     </div>

@@ -37,8 +37,9 @@ PWA (`sw.js`) регистрируется только при запуске ч
 
 - `stanza-diary.entries.v1` — записи (объект `{ "YYYY-MM-DD": Entry }`)
 - `stanza-diary.settings.v1` — настройки
-- `stanza-diary.auth.v1` — локальный флаг входа (не настоящая аутентификация)
+- `stanza-diary.pin.v1` — PIN-блокировка `{ hash, salt }` (с 0.2.0; отсутствует если PIN не задан)
 - `stanza-diary.seeded.v1` — флаг демо-данных
+- `stanza-diary.auth.v1` — **удалённый** legacy-ключ, стирается при старте через `LEGACY_AUTH_KEY`
 
 Схему записи см. в [docs/DATA_MODEL.md](docs/DATA_MODEL.md). При импорте всё прогоняется через `normalizeEntries()` — не доверять входным JSON напрямую.
 
