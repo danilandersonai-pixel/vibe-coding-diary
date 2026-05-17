@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Статистика - Дневник</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Literata:opsz,wght@7..72,400&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#422c00",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "error-container": "#93000a",
+                        "primary": "#d1f1ad",
+                        "surface-container-highest": "#38342a",
+                        "surface-container": "#231f15",
+                        "on-tertiary-container": "#5c5445",
+                        "surface-container-lowest": "#110e06",
+                        "on-background": "#eae2d2",
+                        "surface-container-low": "#1f1b12",
+                        "primary-fixed": "#cdedaa",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#343026",
+                        "primary-container": "#b5d493",
+                        "on-error": "#690005",
+                        "surface-tint": "#b1d090",
+                        "outline": "#8e9285",
+                        "state-pressed": "rgba(181, 212, 147, 0.16)",
+                        "state-hover": "rgba(181, 212, 147, 0.08)",
+                        "on-surface": "#eae2d2",
+                        "background": "#16130a",
+                        "on-secondary-fixed": "#271900",
+                        "error": "#ffb4ab",
+                        "inverse-primary": "#4c6631",
+                        "secondary-fixed-dim": "#efbf6d",
+                        "secondary-container": "#6e4c00",
+                        "primary-fixed-dim": "#b1d090",
+                        "secondary-fixed": "#ffdeab",
+                        "outline-variant": "#44483d",
+                        "on-tertiary": "#363022",
+                        "on-primary-fixed": "#0e2000",
+                        "surface-variant": "#38342a",
+                        "inverse-surface": "#eae2d2",
+                        "surface": "#16130a",
+                        "on-primary-fixed-variant": "#354e1b",
+                        "on-secondary-container": "#efbf6d",
+                        "on-surface-muted": "#8a8170",
+                        "surface-container-high": "#2d2a1f",
+                        "secondary": "#efbf6d",
+                        "outline-dim": "#2a2620",
+                        "on-tertiary-fixed": "#211b0f",
+                        "on-primary-container": "#425c28",
+                        "tertiary-container": "#d5c9b6",
+                        "surface-bright": "#3d392e",
+                        "tertiary-fixed-dim": "#d1c5b2",
+                        "on-tertiary-fixed-variant": "#4e4637",
+                        "on-surface-variant": "#c4c8ba",
+                        "tertiary-fixed": "#eee1cd",
+                        "on-primary": "#1f3606",
+                        "tertiary": "#f2e5d1",
+                        "surface-dim": "#16130a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "unit": "4px",
+                        "3xl": "64px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["JetBrains Mono"],
+                        "caption": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "code-inline": ["JetBrains Mono"],
+                        "body-md": ["Literata"],
+                        "headline-md": ["JetBrains Mono"],
+                        "body-lg": ["Literata"],
+                        "display": ["JetBrains Mono"],
+                        "body-sm": ["Literata"],
+                        "headline-lg": ["JetBrains Mono"],
+                        "section-label": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "caption": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "code-inline": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "section-label": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-image: radial-gradient(circle, #2a2620 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .blinking-cursor {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-[80px]">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full bg-background dark:bg-background border-b border-dashed border-outline-variant z-40 transition-colors duration-200">
+<div class="flex justify-between items-center h-16 px-md max-w-[720px] mx-auto">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary dark:text-primary">terminal</span>
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Дневник</h1>
+</div>
+<button class="text-on-surface-muted hover:bg-state-hover p-sm rounded-DEFAULT transition-colors duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<main class="max-w-[720px] mx-auto px-lg md:px-xl pt-xl pb-2xl space-y-2xl">
+<!-- Headline -->
+<section>
+<h2 class="font-display text-display text-on-surface flex items-center">
+                Статистика<span class="text-primary-container blinking-cursor">_</span>
+</h2>
+</section>
+<!-- Сводка -->
+<section class="space-y-md">
+<div class="border-b border-dashed border-outline-variant pb-sm">
+<h3 class="font-section-label text-section-label text-secondary lowercase">// сводка</h3>
+</div>
+<div class="grid grid-cols-2 gap-lg pt-sm">
+<div class="bg-surface-container border border-dashed border-outline-variant p-md lg:p-lg rounded-DEFAULT">
+<div class="font-display text-display text-secondary">47</div>
+<div class="font-caption text-caption text-on-surface-muted uppercase mt-xs">ВСЕГО ЗАПИСЕЙ</div>
+</div>
+<div class="bg-surface-container border border-dashed border-outline-variant p-md lg:p-lg rounded-DEFAULT">
+<div class="font-display text-display text-primary-container">12</div>
+<div class="font-caption text-caption text-on-surface-muted uppercase mt-xs">ТЕКУЩАЯ СЕРИЯ</div>
+</div>
+<div class="bg-surface-container border border-dashed border-outline-variant p-md lg:p-lg rounded-DEFAULT">
+<div class="font-display text-display text-secondary">18</div>
+<div class="font-caption text-caption text-on-surface-muted uppercase mt-xs">ЛУЧШАЯ СЕРИЯ</div>
+</div>
+<div class="bg-surface-container border border-dashed border-outline-variant p-md lg:p-lg rounded-DEFAULT">
+<div class="font-display text-display text-primary-container">5.2</div>
+<div class="font-caption text-caption text-on-surface-muted uppercase mt-xs">ЗАПИСЕЙ В НЕДЕЛЮ</div>
+</div>
+</div>
+</section>
+<!-- Активность (Year Heatmap) -->
+<section class="space-y-md w-full">
+<div class="border-b border-dashed border-outline-variant pb-sm">
+<h3 class="font-section-label text-section-label text-secondary lowercase">// активность за год</h3>
+</div>
+<div class="pt-sm w-full overflow-x-auto pb-sm">
+<div class="min-w-full">
+<div class="flex justify-between font-caption text-caption text-on-surface-muted uppercase mb-xs px-1">
+<span>Янв</span><span>Фев</span><span>Мар</span><span>Апр</span><span>Май</span><span>Июн</span><span>Июл</span><span>Авг</span><span>Сен</span><span>Окт</span><span>Ноя</span><span>Дек</span>
+</div>
+<div class="grid grid-rows-7 grid-flow-col gap-[3px] w-full justify-between">
+<!-- Dummy data for heatmap to span full width -->
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/40 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/60 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/80 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/40 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-primary-container/60 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/80 rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/40 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/40 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/60 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/80 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/40 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-primary-container/60 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/80 rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/40 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/40 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/60 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-primary-container/20 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/80 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+<div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div><div class="w-3 h-3 bg-primary-container/40 rounded-[2px]"></div><div class="w-3 h-3 bg-surface-container-low rounded-[2px]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Количество слов (Word Count) -->
+<section class="space-y-md w-full">
+<div class="border-b border-dashed border-outline-variant pb-sm">
+<h3 class="font-section-label text-section-label text-secondary lowercase">// количество слов</h3>
+</div>
+<div class="pt-sm w-full">
+<div class="h-48 flex items-end gap-sm border-b border-dashed border-outline-variant pb-xs relative w-full">
+<div class="flex-1 bg-primary-container/30 hover:bg-primary-container transition-colors rounded-t-sm h-[30%] relative group"></div>
+<div class="flex-1 bg-primary-container/50 hover:bg-primary-container transition-colors rounded-t-sm h-[45%] relative group"></div>
+<div class="flex-1 bg-primary-container/20 hover:bg-primary-container transition-colors rounded-t-sm h-[20%] relative group"></div>
+<div class="flex-1 bg-primary-container/80 hover:bg-primary-container transition-colors rounded-t-sm h-[75%] relative group"></div>
+<div class="flex-1 bg-primary-container hover:bg-primary-container transition-colors rounded-t-sm h-[90%] relative group"></div>
+<div class="flex-1 bg-primary-container/40 hover:bg-primary-container transition-colors rounded-t-sm h-[35%] relative group"></div>
+<div class="flex-1 bg-primary-container/60 hover:bg-primary-container transition-colors rounded-t-sm h-[60%] relative group"></div>
+<div class="flex-1 bg-primary-container/30 hover:bg-primary-container transition-colors rounded-t-sm h-[25%] relative group"></div>
+<div class="flex-1 bg-primary-container/90 hover:bg-primary-container transition-colors rounded-t-sm h-[85%] relative group"></div>
+<div class="flex-1 bg-primary-container/50 hover:bg-primary-container transition-colors rounded-t-sm h-[45%] relative group"></div>
+<div class="flex-1 bg-primary-container/70 hover:bg-primary-container transition-colors rounded-t-sm h-[65%] relative group"></div>
+<div class="flex-1 bg-primary-container/40 hover:bg-primary-container transition-colors rounded-t-sm h-[40%] relative group"></div>
+</div>
+<div class="flex justify-between font-caption text-caption text-on-surface-muted uppercase mt-sm px-1">
+<span>Янв</span><span>Дек</span>
+</div>
+</div>
+</section>
+<!-- Топ тегов -->
+<section class="space-y-md">
+<div class="border-b border-dashed border-outline-variant pb-sm">
+<h3 class="font-section-label text-section-label text-secondary lowercase">// топ тегов</h3>
+</div>
+<div class="pt-sm space-y-md">
+<!-- Tag 1 -->
+<div class="flex items-center gap-md">
+<div class="font-code-inline text-code-inline text-on-surface w-24">react</div>
+<div class="flex-1 h-2 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[100%]"></div>
+</div>
+<div class="font-code-inline text-code-inline text-on-surface-muted w-8 text-right">14</div>
+</div>
+<!-- Tag 2 -->
+<div class="flex items-center gap-md">
+<div class="font-code-inline text-code-inline text-on-surface w-24">python</div>
+<div class="flex-1 h-2 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[75%]"></div>
+</div>
+<div class="font-code-inline text-code-inline text-on-surface-muted w-8 text-right">11</div>
+</div>
+<!-- Tag 3 -->
+<div class="flex items-center gap-md">
+<div class="font-code-inline text-code-inline text-on-surface w-24">ui/ux</div>
+<div class="flex-1 h-2 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[60%]"></div>
+</div>
+<div class="font-code-inline text-code-inline text-on-surface-muted w-8 text-right">8</div>
+</div>
+<!-- Tag 4 -->
+<div class="flex items-center gap-md">
+<div class="font-code-inline text-code-inline text-on-surface w-24">thoughts</div>
+<div class="flex-1 h-2 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[40%]"></div>
+</div>
+<div class="font-code-inline text-code-inline text-on-surface-muted w-8 text-right">6</div>
+</div>
+<!-- Tag 5 -->
+<div class="flex items-center gap-md">
+<div class="font-code-inline text-code-inline text-on-surface w-24">planning</div>
+<div class="flex-1 h-2 bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[20%]"></div>
+</div>
+<div class="font-code-inline text-code-inline text-on-surface-muted w-8 text-right">3</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center max-w-[720px] mx-auto bg-surface dark:bg-surface border-t border-dashed border-outline-variant h-[64px]">
+<a class="flex flex-col items-center justify-center text-on-surface-muted hover:text-primary transition-all active:scale-95 duration-100 w-1/4" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">today</span>
+<span class="font-caption text-caption uppercase tracking-wider mt-xs">Сегодня</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-muted hover:text-primary transition-all active:scale-95 duration-100 w-1/4" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">history</span>
+<span class="font-caption text-caption uppercase tracking-wider mt-xs">История</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary fill-primary hover:text-primary transition-all active:scale-95 duration-100 w-1/4" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-caption text-caption uppercase tracking-wider mt-xs">Статистика</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-muted hover:text-primary transition-all active:scale-95 duration-100 w-1/4" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-caption text-caption uppercase tracking-wider mt-xs">Настройки</span>
+</a>
+</nav>
+</body></html>

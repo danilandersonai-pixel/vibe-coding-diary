@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Редактирование записи - Digital Hermit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Literata:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "surface-container-low": "#1f1b12",
+                        "on-surface": "#eae2d2",
+                        "inverse-on-surface": "#343026",
+                        "surface-container-lowest": "#110e06",
+                        "on-error": "#690005",
+                        "on-secondary": "#422c00",
+                        "surface-variant": "#38342a",
+                        "surface-container": "#231f15",
+                        "background": "#16130a",
+                        "surface-container-high": "#2d2a20",
+                        "on-primary-fixed": "#0e2000",
+                        "secondary-fixed": "#ffdeab",
+                        "state-pressed": "rgba(181, 212, 147, 0.16)",
+                        "secondary-container": "#6e4c00",
+                        "primary-fixed-dim": "#b1d090",
+                        "outline-variant": "#44483d",
+                        "on-surface-variant": "#c4c8ba",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "on-secondary-container": "#efbf6d",
+                        "on-tertiary-fixed-variant": "#4e4637",
+                        "on-primary-container": "#425c28",
+                        "surface-tint": "#b1d090",
+                        "surface": "#16130a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#d5c9b6",
+                        "surface-container-highest": "#38342a",
+                        "tertiary": "#f2e5d1",
+                        "secondary": "#efbf6d",
+                        "state-hover": "rgba(181, 212, 147, 0.08)",
+                        "on-tertiary": "#363022",
+                        "inverse-primary": "#4c6631",
+                        "tertiary-fixed": "#eee1cd",
+                        "on-surface-muted": "#8a8170",
+                        "on-tertiary-container": "#5c5445",
+                        "on-secondary-fixed": "#271900",
+                        "surface-dim": "#16130a",
+                        "surface-bright": "#3d392e",
+                        "primary-container": "#b5d493",
+                        "on-background": "#eae2d2",
+                        "on-primary": "#1f3606",
+                        "on-primary-fixed-variant": "#354e1b",
+                        "error": "#ffb4ab",
+                        "outline": "#8e9285",
+                        "secondary-fixed-dim": "#efbf6d",
+                        "inverse-surface": "#eae2d2",
+                        "tertiary-fixed-dim": "#d1c5b2",
+                        "primary": "#d1f1ad",
+                        "outline-dim": "#2a2620",
+                        "primary-fixed": "#cdedaa",
+                        "on-tertiary-fixed": "#211b0f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "xs": "4px",
+                        "unit": "4px",
+                        "md": "16px",
+                        "3xl": "64px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "section-label": ["JetBrains Mono"],
+                        "caption": ["JetBrains Mono"],
+                        "body-lg": ["Literata"],
+                        "body-sm": ["Literata"],
+                        "code-inline": ["JetBrains Mono"],
+                        "body-md": ["Literata"],
+                        "display": ["JetBrains Mono"],
+                        "headline-lg": ["JetBrains Mono"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "section-label": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                        "caption": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code-inline": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-image: radial-gradient(circle, #2a2620 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface dark:bg-surface text-on-surface antialiased min-h-screen flex flex-col pt-[72px] pb-[96px] md:pb-[32px]">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface text-primary dark:text-primary docked full-width top-0 border-b border-dashed border-outline-variant flat no shadows transition-all duration-200 active:opacity-70 flex justify-between items-center px-md py-sm max-w-[720px] mx-auto w-full fixed z-40 left-0 right-0">
+<button class="hover:bg-state-hover p-sm rounded flex items-center justify-center text-on-surface-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left" style="font-variation-settings: 'FILL' 0;">chevron_left</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface flex-grow text-center tracking-tight">// редактирование</h1>
+<div class="w-[40px]"></div> <!-- Spacer for centering -->
+</header>
+<main class="flex-grow flex flex-col max-w-[720px] mx-auto w-full px-lg md:px-xl mt-2xl gap-2xl relative">
+<!-- Header Section -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-headline-lg text-headline-lg text-on-surface flex items-center">
+                12 мая 2026<span class="text-primary cursor-blink ml-[2px]">_</span>
+</h2>
+</section>
+<!-- Content Forms -->
+<section class="flex flex-col gap-xl">
+<!-- // что сделал -->
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-xs">
+<span class="font-section-label text-section-label text-secondary">// что сделал</span>
+<div class="flex-grow border-b border-dashed border-outline-variant mt-[6px]"></div>
+</div>
+<div class="pl-lg">
+<textarea class="w-full bg-surface-container-low border border-dashed border-outline-variant focus:border-primary focus:border-solid rounded p-md font-body-lg text-body-lg text-on-surface placeholder:text-on-surface-muted resize-y min-h-[96px] focus:outline-none focus:ring-0 transition-colors" placeholder="что было сделано">Настроил базовую архитектуру для нового микросервиса обработки данных. Решил использовать FastAPI вместо Flask для лучшей производительности.</textarea>
+</div>
+</div>
+<!-- // что изучил -->
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-xs">
+<span class="font-section-label text-section-label text-secondary">// что изучил</span>
+<div class="flex-grow border-b border-dashed border-outline-variant mt-[6px]"></div>
+</div>
+<div class="pl-lg">
+<textarea class="w-full bg-surface-container-low border border-dashed border-outline-variant focus:border-primary focus:border-solid rounded p-md font-body-lg text-body-lg text-on-surface placeholder:text-on-surface-muted resize-y min-h-[96px] focus:outline-none focus:ring-0 transition-colors" placeholder="что нового узнал">Углубился в паттерны асинхронного программирования в Python. Понял разницу между CPU-bound и I/O-bound задачами в контексте event loop'a.</textarea>
+</div>
+</div>
+<!-- // к чему пришёл -->
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-xs">
+<span class="font-section-label text-section-label text-secondary">// к чему пришёл</span>
+<div class="flex-grow border-b border-dashed border-outline-variant mt-[6px]"></div>
+</div>
+<div class="pl-lg">
+<textarea class="w-full bg-surface-container-low border border-dashed border-outline-variant focus:border-primary focus:border-solid rounded p-md font-body-lg text-body-lg text-on-surface placeholder:text-on-surface-muted resize-y min-h-[96px] focus:outline-none focus:ring-0 transition-colors" placeholder="инсайты, выводы, решения"></textarea>
+</div>
+</div>
+<!-- // что не получилось -->
+<div class="flex flex-col gap-sm">
+<div class="flex items-center gap-xs">
+<span class="font-section-label text-section-label text-secondary">// что не получилось</span>
+<div class="flex-grow border-b border-dashed border-outline-variant mt-[6px]"></div>
+</div>
+<div class="pl-lg">
+<textarea class="w-full bg-surface-container-low border border-dashed border-outline-variant focus:border-primary focus:border-solid rounded p-md font-body-lg text-body-lg text-on-surface placeholder:text-on-surface-muted resize-y min-h-[96px] focus:outline-none focus:ring-0 transition-colors" placeholder="баги, тупики, на чём застрял"></textarea>
+</div>
+</div>
+</section>
+<!-- Tags Section -->
+<section class="flex flex-col gap-sm">
+<div class="flex items-center gap-xs">
+<span class="font-section-label text-section-label text-secondary">// теги</span>
+<div class="flex-grow border-b border-dashed border-outline-variant mt-[6px]"></div>
+</div>
+<div class="pl-lg flex flex-col gap-md">
+<input class="w-full bg-surface-container-low border border-dashed border-outline-variant focus:border-primary focus:border-solid rounded p-sm font-code-inline text-code-inline text-on-surface placeholder:text-on-surface-muted focus:outline-none focus:ring-0 transition-colors" placeholder="через запятую" type="text"/>
+<div class="flex flex-wrap gap-sm">
+<div class="flex items-center gap-xs px-sm py-[2px] rounded-DEFAULT border border-dashed border-secondary bg-transparent group cursor-pointer hover:bg-state-hover transition-colors">
+<span class="font-code-inline text-code-inline text-secondary">python</span>
+<span class="material-symbols-outlined text-secondary text-[14px] opacity-70 group-hover:opacity-100" data-icon="close">close</span>
+</div>
+<div class="flex items-center gap-xs px-sm py-[2px] rounded-DEFAULT border border-dashed border-secondary bg-transparent group cursor-pointer hover:bg-state-hover transition-colors">
+<span class="font-code-inline text-code-inline text-secondary">backend</span>
+<span class="material-symbols-outlined text-secondary text-[14px] opacity-70 group-hover:opacity-100" data-icon="close">close</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Action Section -->
+<section class="mt-xl pb-2xl">
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md lowercase py-md rounded hover:bg-primary-fixed-dim focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-colors active:scale-[0.98] flex items-center justify-center gap-sm">
+                сохранить изменения
+            </button>
+</section>
+</main>
+<!-- BottomNavBar (Hidden on Web, visible on Mobile based on Destination rule - Edit is transactional so usually hidden, but instructed to show active on History per prompt) -->
+<!-- However, the prompt specifically says "Нижняя навигация активна на пункте 'История'", which overrides the standard suppression rule for transactional pages -->
+<nav class="md:hidden bg-surface dark:bg-surface text-primary dark:text-primary docked full-width bottom-0 border-t border-dashed border-outline-variant flat no shadows fixed bottom-0 left-0 right-0 h-[64px] z-50 flex justify-around items-center max-w-[720px] mx-auto transition-transform duration-150">
+<!-- Item 1: Сегодня -->
+<a class="flex flex-col items-center justify-center text-on-surface-muted hover:text-primary transition-colors active:scale-95 w-1/4 h-full" href="#">
+<span class="material-symbols-outlined mb-[2px]" data-icon="edit_note" style="font-variation-settings: 'FILL' 0; stroke-width: 1.5px;">edit_note</span>
+<span class="font-caption text-caption">Сегодня</span>
+</a>
+<!-- Item 2: История (Active) -->
+<a class="flex flex-col items-center justify-center text-primary hover:text-primary transition-colors active:scale-95 w-1/4 h-full relative" href="#">
+<!-- Active indicator subtle background -->
+<div class="absolute inset-0 bg-primary/10 rounded-lg m-xs"></div>
+<span class="material-symbols-outlined mb-[2px] relative z-10" data-icon="history" style="font-variation-settings: 'FILL' 1; stroke-width: 1.5px;">history</span>
+<span class="font-caption text-caption relative z-10">История</span>
+</a>
+<!-- Item 3: Статистика -->
+<a class="flex flex-col items-center justify-center text-on-surface-muted hover:text-primary transition-colors active:scale-95 w-1/4 h-full" href="#">
+<span class="material-symbols-outlined mb-[2px]" data-icon="bar_chart" style="font-variation-settings: 'FILL' 0; stroke-width: 1.5px;">bar_chart</span>
+<span class="font-caption text-caption">Статистика</span>
+</a>
+<!-- Item 4: Настройки -->
+<a class="flex flex-col items-center justify-center text-on-surface-muted hover:text-primary transition-colors active:scale-95 w-1/4 h-full" href="#">
+<span class="material-symbols-outlined mb-[2px]" data-icon="settings" style="font-variation-settings: 'FILL' 0; stroke-width: 1.5px;">settings</span>
+<span class="font-caption text-caption">Настройки</span>
+</a>
+</nav>
+</body></html>

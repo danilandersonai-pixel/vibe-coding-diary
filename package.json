@@ -1,0 +1,11 @@
+{
+  "name": "stanza-diary",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Локальный ежедневник в стиле Stanza Terminal",
+  "scripts": {
+    "dev": "python3 -m http.server 4173",
+    "check": "node --check app.js && node --check sw.js",
+    "check:manifest": "node -e \"JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8')); console.log('manifest ok')\""
+  }
+}

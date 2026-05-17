@@ -1,0 +1,17 @@
+{
+  "name": "Дневник",
+  "short_name": "Дневник",
+  "description": "Локальный ежедневник в стиле Stanza Terminal",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#16130a",
+  "theme_color": "#16130a",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

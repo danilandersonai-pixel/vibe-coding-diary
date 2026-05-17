@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Дневник</title>
+    <meta name="theme-color" content="#16130a" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Literata:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section id="login-screen" class="login-screen dot-grid">
+      <main class="login-card">
+        <header class="login-header">
+          <div class="terminal-line">&gt; log_book <span class="cursor">_</span></div>
+          <h1>Дневник</h1>
+          <p>введи email — пришлём ссылку для входа без пароля</p>
+        </header>
+
+        <form id="login-form" class="auth-form">
+          <input id="email" type="email" placeholder="you@example.com" required />
+          <button class="primary-button" type="submit">отправить ссылку</button>
+          <div class="divider"><span>или</span></div>
+          <button class="ghost-button" type="button" data-login-google>
+            <span class="google-mark" aria-hidden="true">G</span>
+            войти через Google
+          </button>
+        </form>
+      </main>
+    </section>
+
+    <section id="app-screen" class="app-screen dot-grid is-hidden">
+      <header class="top-bar">
+        <div class="top-bar-inner">
+          <button class="icon-button is-back is-hidden" type="button" data-back aria-label="Назад">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <div class="app-brand">
+            <span class="material-symbols-outlined brand-icon">terminal</span>
+            <span>Дневник</span>
+          </div>
+          <button class="icon-button" type="button" data-open-settings aria-label="Настройки">
+            <span class="material-symbols-outlined">settings</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="phone-page">
+        <section class="view is-active" data-view="today" aria-label="Сегодня">
+          <div class="title-block">
+            <h2 class="blink-after">Сегодня</h2>
+            <p id="today-date">среда, 13 мая 2026</p>
+          </div>
+
+          <section class="stats-row">
+            <article class="metric-card">
+              <strong id="streak-count">0</strong>
+              <span>серия дней</span>
+            </article>
+            <article class="metric-card">
+              <strong id="total-count">0</strong>
+              <span>всего записей</span>
+            </article>
+          </section>
+
+          <section class="calendar-panel">
+            <div class="section-title">// календарь</div>
+            <div class="calendar-header">
+              <button class="icon-button" type="button" data-calendar-prev aria-label="Предыдущий месяц">
+                <span class="material-symbols-outlined">chevron_left</span>
+              </button>
+              <strong id="calendar-month">май 2026</strong>
+              <button class="icon-button" type="button" data-calendar-next aria-label="Следующий месяц">
+                <span class="material-symbols-outlined">chevron_right</span>
+              </button>
+            </div>
+            <div class="calendar-weekdays">
+              <span>пн</span><span>вт</span><span>ср</span><span>чт</span><span>пт</span><span>сб</span><span>вс</span>
+            </div>
+            <div id="calendar-grid" class="calendar-grid"></div>
+          </section>
+
+          <form id="entry-form" class="stack-form">
+            <div class="section-title" id="selected-entry-title">// запись на сегодня</div>
+            <div class="autosave-line" id="autosave-status" data-status="saved">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span id="autosave-status-text">сохранено</span>
+              <time id="autosave-status-time"></time>
+            </div>
+            <section class="template-panel">
+              <div>
+                <strong>// шаблон дня</strong>
+                <p id="daily-template-note">мягкие вопросы для пустой записи</p>
+              </div>
+              <button class="ghost-button compact-button" type="button" data-apply-template>вставить шаблон</button>
+            </section>
+            <label class="entry-block">
+              <span>// что сделал</span>
+              <textarea id="did" placeholder="дела, события, мысли"></textarea>
+            </label>
+            <label class="entry-block">
+              <span>// что изучил</span>
+              <textarea id="learned" placeholder="новое, наблюдения, выводы"></textarea>
+            </label>
+            <label class="entry-block">
+              <span>// к чему пришёл</span>
+              <textarea id="result" placeholder="инсайты, решения, ощущения"></textarea>
+            </label>
+            <label class="entry-block">
+              <span>// что не получилось</span>
+              <textarea id="failed" placeholder="тупики, сложности, что мешало"></textarea>
+            </label>
+
+            <label class="tag-field">
+              <span>// теги</span>
+              <input id="tags" type="text" placeholder="через запятую" />
+            </label>
+
+            <button class="primary-button save-button" type="submit">сохранить запись</button>
+          </form>
+        </section>
+
+        <section class="view" data-view="history" aria-label="История">
+          <div class="title-block">
+            <h2>История<span class="cursor">_</span></h2>
+          </div>
+
+          <section class="filters">
+            <label class="search-field">
+              <span class="material-symbols-outlined">search</span>
+              <input id="search" type="search" placeholder="поиск по записям" />
+            </label>
+            <div class="date-filters">
+              <label>
+                <span>с</span>
+                <input id="date-from" type="date" />
+              </label>
+              <label>
+                <span>по</span>
+                <input id="date-to" type="date" />
+              </label>
+            </div>
+            <div id="active-tags" class="tag-row"></div>
+            <div id="filter-tags" class="tag-row"></div>
+          </section>
+
+          <section class="history-section">
+            <div class="section-title" id="history-title">// записи</div>
+            <div id="history-list" class="history-list"></div>
+          </section>
+        </section>
+
+        <section class="view" data-view="stats" aria-label="Статистика">
+          <div class="title-block">
+            <h2>Статистика<span class="cursor">_</span></h2>
+          </div>
+
+          <section class="stats-panel">
+            <div class="section-title">// сводка</div>
+            <div class="stats-grid">
+              <article class="metric-card"><strong id="stat-total">0</strong><span>всего записей</span></article>
+              <article class="metric-card"><strong id="stat-streak">0</strong><span>текущая серия</span></article>
+              <article class="metric-card"><strong id="stat-best">0</strong><span>лучшая серия</span></article>
+              <article class="metric-card"><strong id="stat-week">0</strong><span>записей в неделю</span></article>
+            </div>
+          </section>
+
+          <section class="weekly-panel">
+            <div class="section-title">// обзор недели</div>
+            <div id="weekly-summary" class="weekly-summary"></div>
+          </section>
+
+          <section class="activity-panel">
+            <div class="section-title">// активность за год</div>
+            <div class="months-row">
+              <span>Янв</span><span>Фев</span><span>Мар</span><span>Апр</span><span>Май</span><span>Июн</span>
+              <span>Июл</span><span>Авг</span><span>Сен</span><span>Окт</span><span>Ноя</span><span>Дек</span>
+            </div>
+            <div id="heatmap" class="heatmap"></div>
+          </section>
+
+          <section class="words-panel">
+            <div class="section-title">// количество слов</div>
+            <div id="word-chart" class="bar-chart"></div>
+            <div class="chart-labels"><span>Янв</span><span>Дек</span></div>
+          </section>
+
+          <section class="top-tags-panel">
+            <div class="section-title">// топ тегов</div>
+            <div id="top-tags" class="top-tags"></div>
+          </section>
+        </section>
+
+        <section class="view" data-view="settings" aria-label="Настройки">
+          <div class="title-block">
+            <h2>Настройки<span class="cursor">_</span></h2>
+          </div>
+
+          <section class="settings-list">
+            <div class="section-title">// приложение</div>
+            <label class="setting-row">
+              <span>
+                <strong>Напоминания</strong>
+                <small>ежедневно в 21:00</small>
+              </span>
+              <input id="reminders" type="checkbox" />
+            </label>
+            <label class="setting-row">
+              <span>
+                <strong>Автосохранение</strong>
+                <small>сохранять запись при вводе</small>
+              </span>
+              <input id="autosave" type="checkbox" checked />
+            </label>
+            <button class="ghost-button" type="button" data-export>экспортировать JSON</button>
+            <label class="ghost-button import-button">
+              импортировать JSON
+              <input id="import-json" type="file" accept="application/json" />
+            </label>
+            <button class="danger-button" type="button" data-clear>очистить записи</button>
+            <button class="ghost-button" type="button" data-logout>выйти</button>
+          </section>
+        </section>
+
+        <section class="view" data-view="edit" aria-label="Редактирование">
+          <div class="title-block">
+            <h2 id="edit-title">12 мая 2026<span class="cursor">_</span></h2>
+          </div>
+          <form id="edit-form" class="stack-form">
+            <label class="entry-block"><span>// что сделал</span><textarea id="edit-did"></textarea></label>
+            <label class="entry-block"><span>// что изучил</span><textarea id="edit-learned"></textarea></label>
+            <label class="entry-block"><span>// к чему пришёл</span><textarea id="edit-result"></textarea></label>
+            <label class="entry-block"><span>// что не получилось</span><textarea id="edit-failed"></textarea></label>
+            <label class="tag-field"><span>// теги</span><input id="edit-tags" type="text" placeholder="через запятую" /></label>
+            <button class="primary-button save-button" type="submit">сохранить изменения</button>
+          </form>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Основная навигация">
+        <button class="nav-item is-active" type="button" data-nav="today">
+          <span class="material-symbols-outlined">today</span>
+          <small>Сегодня</small>
+        </button>
+        <button class="nav-item" type="button" data-nav="history">
+          <span class="material-symbols-outlined">history</span>
+          <small>История</small>
+        </button>
+        <button class="nav-item" type="button" data-nav="stats">
+          <span class="material-symbols-outlined">analytics</span>
+          <small>Статистика</small>
+        </button>
+        <button class="nav-item" type="button" data-nav="settings">
+          <span class="material-symbols-outlined">settings</span>
+          <small>Настройки</small>
+        </button>
+      </nav>
+    </section>
+
+    <div id="modal" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-card">
+        <div class="section-title" id="modal-title">// подтверждение</div>
+        <p id="modal-message"></p>
+        <div class="modal-actions">
+          <button class="ghost-button" type="button" data-modal-cancel>отмена</button>
+          <button class="danger-button" type="button" data-modal-confirm>подтвердить</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

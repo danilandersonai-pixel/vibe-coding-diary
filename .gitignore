@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Node / зависимости (на случай если позже появятся)
+node_modules/
+
+# Локальные временные файлы и планы
+tmp/
+
+# Секреты
+.env
+.env.*
+!.env.example
+
+# IDE / редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Логи
+*.log
+
+# Локальные настройки Claude (если случайно положатся в проект)
+.claude/settings.local.json
