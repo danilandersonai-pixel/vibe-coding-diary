@@ -723,45 +723,6 @@ function topTags() {
   return Array.from(counts, ([tag, count]) => ({ tag, count })).sort((a, b) => b.count - a.count);
 }
 
-function currentStreak(entries) {
-  const dates = new Set(entries.map((entry) => entry.date));
-  let streak = 0;
-  let date = todayKey();
-  while (dates.has(date)) {
-    streak += 1;
-    date = offsetDate(-streak);
-  }
-  return streak;
-}
-
-function bestStreak(entries) {
-  const dates = entries.map((entry) => entry.date).sort();
-  let best = 0;
-  let current = 0;
-  let previous = null;
-  dates.forEach((date) => {
-    current = previous && daysBetween(previous, date) === 1 ? current + 1 : 1;
-    best = Math.max(best, current);
-    previous = date;
-  });
-  return best;
-}
-
-function daysBetween(a, b) {
-  return Math.round((new Date(`${b}T12:00:00`) - new Date(`${a}T12:00:00`)) / 86_400_000);
-}
-
-function splitTags(value) {
-  return value
-    .split(",")
-    .map((tag) => tag.trim().toLowerCase())
-    .filter(Boolean);
-}
-
-function wordCount(entry) {
-  return [entry.did, entry.learned, entry.result, entry.failed].join(" ").trim().split(/\s+/).filter(Boolean).length;
-}
-
 function hasEntryText(entry) {
   return Boolean(entry && [entry.did, entry.learned, entry.result, entry.failed, entry.tags.join("")].some(Boolean));
 }
@@ -839,34 +800,6 @@ function persistEntries() {
 
 function persistSettings() {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.settings));
-}
-
-function todayKey() {
-  const now = new Date();
-  const offset = now.getTimezoneOffset();
-  return new Date(now.getTime() - offset * 60_000).toISOString().slice(0, 10);
-}
-
-function offsetDate(offset) {
-  const date = new Date(`${todayKey()}T12:00:00`);
-  date.setDate(date.getDate() + offset);
-  return date.toISOString().slice(0, 10);
-}
-
-function formatDate(date, withWeekday = false) {
-  return new Intl.DateTimeFormat("ru-RU", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    ...(withWeekday ? { weekday: "long" } : {}),
-  }).format(new Date(`${date}T12:00:00`));
-}
-
-function formatSaveTime(date) {
-  return new Intl.DateTimeFormat("ru-RU", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
 }
 
 function registerServiceWorker() {
@@ -1071,4 +1004,77 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+// =============== dates ===============
+
+function todayKey() {
+  const now = new Date();
+  const offset = now.getTimezoneOffset();
+  return new Date(now.getTime() - offset * 60_000).toISOString().slice(0, 10);
+}
+
+function offsetDate(offset) {
+  const date = new Date(`${todayKey()}T12:00:00`);
+  date.setDate(date.getDate() + offset);
+  return date.toISOString().slice(0, 10);
+}
+
+function daysBetween(a, b) {
+  return Math.round((new Date(`${b}T12:00:00`) - new Date(`${a}T12:00:00`)) / 86_400_000);
+}
+
+function formatDate(date, withWeekday = false) {
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    ...(withWeekday ? { weekday: "long" } : {}),
+  }).format(new Date(`${date}T12:00:00`));
+}
+
+function formatSaveTime(date) {
+  return new Intl.DateTimeFormat("ru-RU", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
+// =============== tags ===============
+
+function splitTags(value) {
+  return value
+    .split(",")
+    .map((tag) => tag.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+// =============== stats ===============
+
+function wordCount(entry) {
+  return [entry.did, entry.learned, entry.result, entry.failed].join(" ").trim().split(/\s+/).filter(Boolean).length;
+}
+
+function currentStreak(entries) {
+  const dates = new Set(entries.map((entry) => entry.date));
+  let streak = 0;
+  let date = todayKey();
+  while (dates.has(date)) {
+    streak += 1;
+    date = offsetDate(-streak);
+  }
+  return streak;
+}
+
+function bestStreak(entries) {
+  const dates = entries.map((entry) => entry.date).sort();
+  let best = 0;
+  let current = 0;
+  let previous = null;
+  dates.forEach((date) => {
+    current = previous && daysBetween(previous, date) === 1 ? current + 1 : 1;
+    best = Math.max(best, current);
+    previous = date;
+  });
+  return best;
 }
