@@ -1,6 +1,6 @@
 {
   "name": "stanza-diary",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "Локальный ежедневник в стиле Stanza Terminal",
   "scripts": {

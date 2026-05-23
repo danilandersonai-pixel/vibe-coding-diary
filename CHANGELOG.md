@@ -2,6 +2,13 @@
 
 Формат близок к Keep a Changelog. Версии пока проектные, без Git-тегов.
 
+## 0.2.2 - 2026-05-23
+
+Изменено:
+
+- функции `normalizeEntries`, `exportEntries`, `importEntries` сгруппированы в секции `normalize` и `import/export` внутри `app.js`;
+- подготовка к этапу 2 шагу 3 (storage repository).
+
 ## 0.2.1 - 2026-05-23
 
 Изменено:

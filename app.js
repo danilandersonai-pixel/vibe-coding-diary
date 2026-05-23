@@ -643,33 +643,6 @@ async function deleteEntry(date) {
   renderAll();
 }
 
-function exportEntries() {
-  const blob = new Blob([JSON.stringify(state.entries, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `diary-${todayKey()}.json`;
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
-async function importEntries(event) {
-  const file = event.target.files?.[0];
-  if (!file) return;
-  try {
-    const imported = normalizeEntries(JSON.parse(await file.text()));
-    state.entries = { ...state.entries, ...imported };
-    persistEntries();
-    fillEntryForm(state.selectedDate);
-    renderAll();
-    await notice(`Импортировано записей: ${Object.keys(imported).length}`);
-  } catch {
-    await notice("Не получилось импортировать JSON-файл.");
-  } finally {
-    event.target.value = "";
-  }
-}
-
 function confirmAction(message) {
   return openModal(message, true);
 }
@@ -746,26 +719,6 @@ function loadSettings() {
   } catch {
     return { reminders: false, autosave: true };
   }
-}
-
-function normalizeEntries(raw) {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
-  return Object.fromEntries(
-    Object.entries(raw)
-      .filter(([date]) => /^\d{4}-\d{2}-\d{2}$/.test(date))
-      .map(([date, entry]) => [
-        date,
-        {
-          date,
-          did: String(entry.did || ""),
-          learned: String(entry.learned || ""),
-          result: String(entry.result || ""),
-          failed: String(entry.failed || ""),
-          tags: Array.isArray(entry.tags) ? entry.tags.map(String) : splitTags(String(entry.tags || "")),
-          updatedAt: String(entry.updatedAt || new Date().toISOString()),
-        },
-      ]),
-  );
 }
 
 function seedEntries() {
@@ -1004,6 +957,57 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+// =============== normalize ===============
+
+function normalizeEntries(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  return Object.fromEntries(
+    Object.entries(raw)
+      .filter(([date]) => /^\d{4}-\d{2}-\d{2}$/.test(date))
+      .map(([date, entry]) => [
+        date,
+        {
+          date,
+          did: String(entry.did || ""),
+          learned: String(entry.learned || ""),
+          result: String(entry.result || ""),
+          failed: String(entry.failed || ""),
+          tags: Array.isArray(entry.tags) ? entry.tags.map(String) : splitTags(String(entry.tags || "")),
+          updatedAt: String(entry.updatedAt || new Date().toISOString()),
+        },
+      ]),
+  );
+}
+
+// =============== import/export ===============
+
+function exportEntries() {
+  const blob = new Blob([JSON.stringify(state.entries, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `diary-${todayKey()}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+async function importEntries(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  try {
+    const imported = normalizeEntries(JSON.parse(await file.text()));
+    state.entries = { ...state.entries, ...imported };
+    persistEntries();
+    fillEntryForm(state.selectedDate);
+    renderAll();
+    await notice(`Импортировано записей: ${Object.keys(imported).length}`);
+  } catch {
+    await notice("Не получилось импортировать JSON-файл.");
+  } finally {
+    event.target.value = "";
+  }
 }
 
 // =============== dates ===============
